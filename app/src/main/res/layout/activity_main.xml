@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ProgressBar
+        android:id="@+id/progress_test"
+        android:layout_width="120dp"
+        android:layout_height="20dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/progress_size_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:padding="10dp"
+        android:text="0%"
+        app:layout_constraintTop_toBottomOf="@id/progress_test"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+<Button
+    android:id="@+id/btn_down"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/progress_size_text"
+    app:layout_constraintLeft_toLeftOf="parent"
+    android:text="下载"
+    />
+    <Button
+        android:id="@+id/btn_oss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btn_down"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="OSS"
+        />
+    <Button
+        android:id="@+id/btn_apk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btn_oss"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="APK"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

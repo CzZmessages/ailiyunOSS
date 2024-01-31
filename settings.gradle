@@ -1,0 +1,3 @@
+rootProject.name = "OSSServiceDemo"
+include ':app'
+include ':CommonLibrary'
