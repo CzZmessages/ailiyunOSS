@@ -133,8 +133,8 @@ public class MainActivity extends AppCompatActivity {
         String id = SPUtils.getInstance().getString("id");
         String Scret = SPUtils.getInstance().getString("Scret");
         String Token = SPUtils.getInstance().getString("Token");
-//        String apkPath = SPUtils.getInstance().getString("path");
-        String apkPath = "output/apkWarehouse/1.1.2.8-320.apk";
+        String apkPath = SPUtils.getInstance().getString("path");
+//        String apkPath = "output/apkWarehouse/1.1.2.8-320.apk";
 //        LogUtils.e("取出数据id："+id+"/----Scr:"+Scret+"/----Token"+Token);
         ossService.prepareOSS(id, Scret, Token, new OSSCallback() {
             @Override
