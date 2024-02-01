@@ -36,10 +36,10 @@ public class DownLoadViewModel extends BaseViewModel {
         return ossMessgae;
     }
     //微信接口
-    public LiveData<String> getApk(){
+    public LiveData<String> getApk(String apkName){
         final MutableLiveData<String> apkData=new MutableLiveData<>();
         JsonObject jsonObject=new JsonObject();
-        jsonObject.addProperty("appName","微信");
+        jsonObject.addProperty("appName",apkName);
         add(execute(HttpUtils.doPost(Constant.bas_Url+"totherapp/app",jsonObject.toString()),
                 resultBean->apkData.setValue(String.valueOf(resultBean)),
                 throwable->apkData.setValue("")));
