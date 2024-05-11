@@ -38,5 +38,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.aliyun.dpa:oss-android-sdk:2.9.13'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'org.jsoup:jsoup:1.14.3'  // 使用最新版本替换此处的1.14.3
     implementation project(path: ':CommonLibrary')
 }
