@@ -1,6 +1,7 @@
 package com.lenkeng.videoads.test;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.xiaweizi.marquee.MarqueeTextView;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,11 +34,13 @@ import java.util.regex.Pattern;
 public class StyleTextUpdate {
     private Queue<String> logContentQueue = new LinkedList<>();
     private SpanTextView textView2;
+    private MarqueeTextView textView3;
     private SpannableStringBuilder accumulatedText = new SpannableStringBuilder();
     private static final String TAG = "StyleTextUpdate";
+    private boolean isFillSpaceExecuted = false;
     private   int as=0;
-    public StyleTextUpdate(SpanTextView textView) {
-        this.textView2 = textView;
+    public StyleTextUpdate(MarqueeTextView textView) {
+        this.textView3 = textView;
     }
 
 
@@ -66,8 +71,23 @@ public class StyleTextUpdate {
         }
 
         // 设置到TextView
-        textView2.setText(accumulatedText);
-
+        textView3.setText(accumulatedText);
+        // 设置到TextView之后，检查是否需要填充空格
+//        fillSpaceUntilWidthExceeded();
+        // 检查是否已经执行过fillSpaceUntilWidthExceeded
+//        if (!isFillSpaceExecuted) {
+//            // 延迟2秒执行填充空格的逻辑
+//            textView3.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (!isFillSpaceExecuted) { // 双重检查锁定，防止并发问题
+////                        fillSpaceUntilWidthExceeded();
+//                        isFillSpaceExecuted = true; // 设置标志位，表示已执行
+//                    }
+//                }
+//            }, 1500);
+//        }
+        Log.d("StyleTextUpdate","内容"+accumulatedText);
     }
 
     public int getLength() {
@@ -92,33 +112,33 @@ public class StyleTextUpdate {
             int g = Integer.parseInt(backgroundMatcher.group(2));
             int b = Integer.parseInt(backgroundMatcher.group(3));
             Log.d(TAG, "RGB:--R" + r + "  --G" + g + " --B" + b);
-            textView2.setBackgroundColor(Color.rgb(r, g, b));
+            textView3.setBackgroundColor(Color.rgb(r, g, b));
         }
         i++;
         //处理宽
-        String widthRegex = "width:\\s*(\\d+)px;";
+        String widthRegex = "width:\\s*([\\d]+(\\.\\d+)?)px;";
         Pattern widthPattern = Pattern.compile(widthRegex);
         Matcher widthMatcher = widthPattern.matcher(styleInfo);
         if (widthMatcher.find() && stylesFlag[i] == 0) {
             stylesFlag[i] = 1;
             int dpSize = Integer.parseInt(widthMatcher.group(1));
             // 转换为dp
-            float dpValue = dpSize / (displayMetrics.densityDpi / 450f);
+            float dpValue = dpSize / (displayMetrics.densityDpi / 500f);
             Log.d(TAG, "widthDP值" + dpValue);
-            textView2.setWidth((int) dpValue);
+            textView3.setWidth((int) dpValue);
         }
         i++;
         //处理高
-        String heightRegex = "(?<!-|[-[:alnum:]])height:\\s*(\\d+)px;";
+        String heightRegex = "(?<!-|[-[:alnum:]])height:\\s*([\\d]+(\\.\\d+)?)px;";
         Pattern heightPattern = Pattern.compile(heightRegex);
         Matcher heightMatcher = heightPattern.matcher(styleInfo);
         if (heightMatcher.find() && stylesFlag[i] == 0) {
             stylesFlag[i] = 1;
             int dpSize = Integer.parseInt(heightMatcher.group(1));
             // 转换为dp
-            float dpValue = dpSize / (displayMetrics.densityDpi / 330f);
+            float dpValue = dpSize / (displayMetrics.densityDpi / 500f);
             Log.d(TAG, "heightDP值" + dpValue);
-            textView2.setHeight((int) dpValue);
+            textView3.setHeight((int) dpValue);
         }
         i++;
         // 示例：处理字体大小
@@ -198,32 +218,32 @@ public class StyleTextUpdate {
         i++;
    Log.d("StyleTextUpdate","累计次数"+i);
         //处理在布局中的位置 边距高
-        String marginTopRegex ="top:\\s*(\\d+)px;";
+        String marginTopRegex ="top:\\s*([\\d]+(\\.\\d+)?)px;";
         Pattern marginTopPattern=Pattern.compile(marginTopRegex);
         Matcher marginTopMatcher=marginTopPattern.matcher(styleInfo);
 
         if(marginTopMatcher.find()&&stylesFlag[i]==0){
             stylesFlag[i]=1;
             int dpSize=Integer.parseInt(marginTopMatcher.group(1));
-            float dpValue = dpSize / (displayMetrics.densityDpi / 250f);
+            float dpValue = dpSize / (displayMetrics.densityDpi / 490f);
             Log.d("StyleTextUpdate","需要设置的上边距:"+dpValue+"   dpSize"+dpSize);
-              setTextViewMarginTop(textView2,(int)dpValue);
+              setTextViewMarginTop(textView3,(int)dpValue);
         }
         i++;
         //处理布局中的位置 边距left
-        String marginLeftRegex="left:\\s*(\\d+)px;";
+        String marginLeftRegex="left:\\s*([\\d]+(\\.\\d+)?)px;";
         Pattern marginLeftPattern=Pattern.compile(marginLeftRegex);
         Matcher marginLeftMatcher=marginLeftPattern.matcher(styleInfo);
         if(marginLeftMatcher.find()){
          stylesFlag[i]=1;
          int dpSize=Integer.parseInt(marginLeftMatcher.group(1));
          float dbValue=dpSize/(displayMetrics.densityDpi/520f);
-         setTextViewMarginLeft(textView2,(int)dbValue);
+         setTextViewMarginLeft(textView3,(int)dbValue);
         }
         // 根据需要添加更多样式处理逻辑...
     }
     // 添加一个方法来设置TextView的上边距
-    private void setTextViewMarginTop(SpanTextView textView, int marginTopInPx) {
+    private void setTextViewMarginTop(MarqueeTextView textView, int marginTopInPx) {
         ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
         if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
@@ -232,12 +252,43 @@ public class StyleTextUpdate {
         }
     }
     //左边距
-    private void setTextViewMarginLeft(SpanTextView textView, int marginLeftInPx) {
+    private void setTextViewMarginLeft(MarqueeTextView textView, int marginLeftInPx) {
         ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
         if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
             marginLayoutParams.leftMargin = marginLeftInPx;
             textView.setLayoutParams(marginLayoutParams);
+        }
+    }
+    private void fillSpaceUntilWidthExceeded() {
+        // 获取TextView的宽度
+        int textViewWidth = textView3.getWidth();
+        Log.d("lo","wi"+textViewWidth);
+        if (textViewWidth <= 0) {
+            // 如果TextView的宽度未确定，可能是测量尚未完成，此时不宜进行操作
+            return;
+        }
+
+        // 使用textView2的paint来估算文本宽度，确保paint的属性与TextView设置的一致
+        Paint paint = textView3.getPaint();
+        // 假设使用textView2的textSize作为paint的大小，实际情况可能需要调整
+        paint.setTextSize(textView3.getTextSize());
+
+        // 计算当前累计文本的总宽度
+        float totalTextWidth = paint.measureText(accumulatedText.toString());
+        Log.d("StyleTextUpdate","wi"+totalTextWidth+" textwithd"+textViewWidth);
+        // 判断是否需要填充空格
+        if (totalTextWidth < textViewWidth) {
+            // 计算需要填充的空格数量，这里简单假设单个空格的宽度等于' '的宽度
+            float spaceWidth = paint.measureText(" ");
+            int spacesToAdd = Math.round((textViewWidth - totalTextWidth) / spaceWidth);
+            Log.d("StyleTextUpdate","wis"+totalTextWidth+" textwithds"+textViewWidth+"循环次数"+spacesToAdd);
+            // 在文本末尾添加空格
+            for (int i = 0; i < spacesToAdd; i++) {
+                accumulatedText.append("  ");
+            }
+            // 更新TextView的文本
+            textView3.setText(accumulatedText);
         }
     }
 
